@@ -12,10 +12,8 @@ public class Input {
         return input.nextLine().toLowerCase().trim();
     }
 
-    public static void isQuit(String input) {
-        if (input.contains("exit") || input.contains("quit")) {
-            System.exit(0);
-        }
+    public static boolean isQuit(String input) {
+        return input.contains("quit") || input.contains("exit");
     }
 
     public static boolean isGo(String input) {
