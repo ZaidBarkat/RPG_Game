@@ -1,0 +1,196 @@
+{
+  "startingRoom": "Cell Block A",
+  "endingRoom": "Outside",
+  "rooms": [
+    {
+      "name": "Cell Block A",
+      "description": "It's cold and isolating, you are in your cell, the door is open...",
+      "items": [
+        "cloth"
+      ],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "Hallway"
+        }
+      ]
+    },
+    {
+      "name": "Hallway",
+      "description": "You made it to the hallway. You see other prisoners close by, the cafeteria, and the warden's office.",
+      "items": [
+        "Toothbrush"
+      ],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "Warden's Office"
+        },
+        {
+          "directionName": "East",
+          "room": "Cell Block A"
+        },
+        {
+          "directionName": "SouthWest",
+          "room": "Cafeteria"
+        },
+        {
+          "directionName": "SouthEast",
+          "room": "Cell Block B"
+        }
+      ]
+    },
+    {
+      "name": "Office",
+      "description": "You are in the Warden's office, where is everyone?",
+      "items": [
+        "Screwdriver",
+        "Pen"
+      ],
+      "directions": [
+        {
+          "directionName": "East",
+          "room": "Hallway"
+        }
+      ]
+    },
+    {
+      "name": "Cafeteria",
+      "description": "The cafeteria is empty, along with the kitchen, bathroom, and lounge.",
+      "directions": [
+        {
+          "directionName": "NorthEast",
+          "room": "Hallway"
+        },
+        {
+          "directionName": "West",
+          "room": "Bathroom"
+        },
+        {
+          "directionName": "SouthWest",
+          "room": "Kitchen"
+        },
+        {
+          "directionName": "South",
+          "room": "Lounge"
+        }
+      ]
+    },
+    {
+      "name": "Bathroom",
+      "description": "the bathroom looks unruly, you see something from the corner of your eye.",
+      "items": [
+        "ID-card"
+      ],
+      "directions": [
+        {
+          "directionName": "East",
+          "room": "Cafeteria"
+        }
+      ]
+    },
+    {
+      "name": "Kitchen",
+      "description": "You see nothing but food around you.",
+      "items": [
+        "Spatula",
+        "Knife"
+      ],
+      "directions": [
+        {
+          "directionName": "NorthEast",
+          "room": "Cafeteria"
+        }
+      ]
+    },
+    {
+      "name": "Lounge",
+      "description": "Three couches, dirt covering them all, you see a vent in the corner.",
+      "items": [
+        "Cup"
+      ],
+      "directions": [
+        {
+          "directionName": "North",
+          "room": "Cafeteria"
+        },
+        {
+          "directionName": "South",
+          "room": "Vent"
+        }
+      ]
+    },
+    {
+      "name": "Vent",
+      "description": "You are finally through the vent, only a door preventing your freedom.",
+      "directions": [
+        {
+          "directionName": "North",
+          "room": "Lounge"
+        },
+        {
+          "directionName": "South",
+          "room": "Outside"
+        }
+      ]
+    },
+    {
+      "name": "Outside",
+      "description": "You made it, you're free... but what lies in the future is unknown.",
+      "directions": [
+        {
+          "directionName": "South",
+          "room": "Vent"
+        }
+      ]
+    },
+    {
+      "name": "Cell Block B",
+      "description": "What you thought were prisoners turned out to be skeletons, what now?",
+      "items": [
+        "cloth"
+      ],
+      "directions": [
+        {
+          "directionName": "NorthWest",
+          "room": "Hallway"
+        },
+        {
+          "directionName": "East",
+          "room": "Isolation Chamber"
+        },
+        {
+          "directionName": "South",
+          "room": "Yard"
+        }
+      ]
+    },
+    {
+      "name": "Isolation Chamber",
+      "description": "It's so cold in here, what's that in the wall?",
+      "items": [
+        "Key",
+        "Brick"
+      ],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "Cell Block B"
+        }
+      ]
+    },
+    {
+      "name": "Yard",
+      "description": "It's dark out here, the grass is so dead.",
+      "items": [
+        "Grass"
+      ],
+      "directions": [
+        {
+          "directionName": "North",
+          "room": "Cell Block B"
+        }
+      ]
+    }
+  ]
+}
