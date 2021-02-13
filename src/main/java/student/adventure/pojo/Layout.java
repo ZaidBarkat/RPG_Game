@@ -5,7 +5,7 @@ import java.util.List;
 public class Layout {
     private String startingRoom;
     private String endingRoom;
-    private List<room> rooms;
+    private List<Room> rooms;
 
     public String getStartingRoom() {
         return startingRoom;
@@ -15,7 +15,7 @@ public class Layout {
         return endingRoom;
     }
 
-    public List<room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 }

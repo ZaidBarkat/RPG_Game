@@ -2,9 +2,9 @@ package student.adventure.pojo;
 
 import java.util.List;
 
-public class room {
+public class Room {
     private String name;
-    private String Description;
+    private String description;
     private List<String> items;
     private List<Direction> directions;
 
@@ -13,7 +13,7 @@ public class room {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public List<String> getItems() {
