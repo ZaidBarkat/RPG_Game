@@ -43,7 +43,7 @@ public class State {
         Direction direction;
 
         if (findByDirectionName(room.getDirections(), input) == null) {
-            System.out.println("I can't go there!");
+            System.out.println("You can't go " + input[1]);
             return;
         } else {
             direction = findByDirectionName(room.getDirections(), input);
@@ -56,6 +56,11 @@ public class State {
         directionNames.clear();
 
         addDirectionNames(currentRoom);
+
+        if (currentRoom.getName().equals(layout.getEndingRoom())) {
+            System.out.println(description);
+            return;
+        }
 
         textOutput(description, directionNames, items);
     }

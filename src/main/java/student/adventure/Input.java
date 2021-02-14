@@ -9,9 +9,12 @@ public class Input {
         final String PROMPT = ">";
         Scanner input = new Scanner(System.in);
         System.out.print(PROMPT);
-        String[] inputString = input.nextLine().toLowerCase().split(" ");
-        inputString[0] = inputString[0].trim();
-        inputString[1] = inputString[1].trim();
+        String[] inputString = input.nextLine().toLowerCase().split("\\W+");
+
+        if (inputString.length == 1 && !(Input.isQuit(inputString[0]))) {
+            return new String[]{" ", " "};
+        }
+
         return inputString;
     }
 
