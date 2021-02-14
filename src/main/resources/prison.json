@@ -19,7 +19,7 @@
       "name": "Hallway",
       "description": "You made it to the hallway. You see other prisoners close by, the cafeteria, and the warden's office.",
       "items": [
-        "Toothbrush"
+        "toothbrush"
       ],
       "directions": [
         {
@@ -44,8 +44,8 @@
       "name": "Warden's Office",
       "description": "You are in the Warden's office, where is everyone?",
       "items": [
-        "Screwdriver",
-        "Pen"
+        "screwdriver",
+        "pen"
       ],
       "directions": [
         {
@@ -80,7 +80,7 @@
       "name": "Bathroom",
       "description": "the bathroom looks unruly, you see something from the corner of your eye.",
       "items": [
-        "ID-card"
+        "id"
       ],
       "directions": [
         {
@@ -93,8 +93,8 @@
       "name": "Kitchen",
       "description": "You see nothing but food around you.",
       "items": [
-        "Spatula",
-        "Knife"
+        "spatula",
+        "knife"
       ],
       "directions": [
         {
@@ -107,7 +107,7 @@
       "name": "Lounge",
       "description": "Three couches, dirt covering them all, you see a vent in the corner.",
       "items": [
-        "Cup"
+        "cup"
       ],
       "directions": [
         {
@@ -169,8 +169,8 @@
       "name": "Isolation Chamber",
       "description": "It's so cold in here, what's that in the wall?",
       "items": [
-        "Key",
-        "Brick"
+        "key",
+        "brick"
       ],
       "directions": [
         {
@@ -183,7 +183,7 @@
       "name": "Yard",
       "description": "It's dark out here, the grass is so dead.",
       "items": [
-        "Grass"
+        "grass"
       ],
       "directions": [
         {

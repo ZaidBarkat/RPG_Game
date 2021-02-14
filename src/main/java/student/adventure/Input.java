@@ -1,6 +1,5 @@
 package student.adventure;
 
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Input {
@@ -11,7 +10,7 @@ public class Input {
         System.out.print(PROMPT);
         String[] inputString = input.nextLine().toLowerCase().split("\\W+");
 
-        if (inputString.length == 1 && !(Input.isQuit(inputString[0]))) {
+        if ((inputString.length == 1 || inputString.length >= 3) && !(Input.isQuit(inputString[0])) && !(Input.isExamine(inputString[0]))) {
             return new String[]{" ", " "};
         }
 
