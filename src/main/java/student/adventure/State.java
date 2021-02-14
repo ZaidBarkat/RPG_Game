@@ -28,7 +28,7 @@ public class State {
     private static List<String> items = new ArrayList<>();
     private static List<String> directionNames = new ArrayList<>();
 
-    public static String startState() {
+    public static void startState() {
         Room startingRoom = findByRoomName(layout.getRooms(), layout.getStartingRoom());
         room = startingRoom;
         description = startingRoom.getDescription();
@@ -36,14 +36,15 @@ public class State {
 
         addDirectionNames(startingRoom);
 
-        return textOutput(description, directionNames, items);
+        textOutput(description, directionNames, items);
     }
 
-    public static String goState(String input) {
+    public static void goState(String[] input) {
         Direction direction;
 
         if (findByDirectionName(room.getDirections(), input) == null) {
-            return "I can't go there!";
+            System.out.println("I can't go there!");
+            return;
         } else {
             direction = findByDirectionName(room.getDirections(), input);
         }
@@ -56,15 +57,15 @@ public class State {
 
         addDirectionNames(currentRoom);
 
-        return textOutput(description, directionNames, items);
+        textOutput(description, directionNames, items);
     }
 
-    public static String examineState(String input) {
-        return textOutput(description, directionNames, items);
+    public static void examineState() {
+        textOutput(description, directionNames, items);
     }
 
-    private static String textOutput(String description, List<String> directionNames, List<String> items) {
-        return description + "\n" + "From here, you can go: " + directionNames + "\n" + "Items visible: " + items;
+    private static void textOutput(String description, List<String> directionNames, List<String> items) {
+        System.out.println(description + "\n" + "From here, you can go: " + directionNames + "\n" + "Items visible: " + items);
     }
 
     private static void addDirectionNames(Room room) {
@@ -77,8 +78,8 @@ public class State {
         return listRoom.stream().filter(room -> name.equals(room.getName())).findFirst().orElse(null);
     }
 
-    private static Direction findByDirectionName(Collection<Direction> listDirection, String directionName) {
-        return listDirection.stream().filter(direction -> directionName.contains(direction.getDirectionName().toLowerCase())).findFirst().orElse(null);
+    private static Direction findByDirectionName(Collection<Direction> listDirection, String[] directionName) {
+        return listDirection.stream().filter(direction -> directionName[1].equals(direction.getDirectionName().toLowerCase())).findFirst().orElse(null);
     }
 
     public static boolean winCondition() {

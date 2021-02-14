@@ -5,11 +5,14 @@ import java.util.Scanner;
 
 public class Input {
 
-    public static String userInput() {
+    public static String[] userInput() {
         final String PROMPT = ">";
         Scanner input = new Scanner(System.in);
         System.out.print(PROMPT);
-        return input.nextLine().toLowerCase().trim();
+        String[] inputString = input.nextLine().toLowerCase().split(" ");
+        inputString[0] = inputString[0].trim();
+        inputString[1] = inputString[1].trim();
+        return inputString;
     }
 
     public static boolean isQuit(String input) {
