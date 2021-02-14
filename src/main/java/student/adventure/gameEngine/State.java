@@ -1,4 +1,4 @@
-package student.adventure;
+package student.adventure.gameEngine;
 
 import student.adventure.pojo.Direction;
 import student.adventure.pojo.Layout;

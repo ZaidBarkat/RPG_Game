@@ -1,4 +1,4 @@
-package student.adventure;
+package student.adventure.gameEngine;
 
 import java.util.Scanner;
 
