@@ -6,7 +6,6 @@ import org.junit.Test;
 import student.adventure.gameEngine.Initialize;
 import student.adventure.gameEngine.State;
 import student.adventure.pojo.Layout;
-import student.adventure.pojo.Room;
 
 import java.io.IOException;
 
@@ -25,20 +24,20 @@ public class StateTest {
     Assert.assertEquals(layout.getStartingRoom(), State.room.getName());
   }
 
-    @Test
-    public void testValidGoState() {
-        State.room = State.findByRoomName(layout.getRooms(), "Bathroom");
+  @Test
+  public void testValidGoState() {
+    State.room = State.findByRoomName(layout.getRooms(), "Bathroom");
 
-        State.goState(new String[] {"go", "east"});
+    State.goState(new String[] {"go", "east"});
 
-        Assert.assertEquals("Cafeteria", State.room.getName());
-    }
+    Assert.assertEquals("Cafeteria", State.room.getName());
+  }
 
   @Test
   public void testInvalidGoState() {
     State.room = State.findByRoomName(layout.getRooms(), "Bathroom");
 
-    State.goState(new String[]{"go", "here"});
+    State.goState(new String[] {"go", "here"});
 
     Assert.assertNull(State.description);
   }
@@ -61,7 +60,6 @@ public class StateTest {
     State.goState(new String[] {"go", "west"});
     State.takeState(new String[] {"take", "something"});
 
-    System.out.println(State.inventory);
     Assert.assertTrue(State.inventory.isEmpty());
   }
 
@@ -77,12 +75,13 @@ public class StateTest {
 
   @Test
   public void testInvalidDropState() {
-    State.room = State.findByRoomName(layout.getRooms(), "Cafeteria");
+    State.room = State.findByRoomName(layout.getRooms(), "Cell Block B");
 
-    State.goState(new String[] {"go", "northeast"});
-    State.dropState(new String[] {"drop", "toothbrush"});
+    State.goState(new String[] {"go", "east"});
+    State.takeState(new String[] {"take", "brick"});
+    State.dropState(new String[] {"drop", "something"});
 
-    Assert.assertTrue(State.inventory.isEmpty());
+    Assert.assertTrue(State.inventory.contains("brick"));
   }
 
   @Test
