@@ -20,11 +20,11 @@ public class State {
     }
   }
 
-  private static Room room;
-  private static String description = "";
-  private static List<String> items = new ArrayList<>();
-  private static List<String> directionNames = new ArrayList<>();
-  private static List<String> inventory = new ArrayList<>();
+  public static Room room;
+  public static String description = null;
+  public static List<String> items = new ArrayList<>();
+  public static List<String> directionNames = new ArrayList<>();
+  public static List<String> inventory = new ArrayList<>();
 
   public static void startState() {
     Room startingRoom = findByRoomName(layout.getRooms(), layout.getStartingRoom());
@@ -95,6 +95,18 @@ public class State {
     return room.getName().equals(layout.getEndingRoom());
   }
 
+  public static Room findByRoomName(Collection<Room> listRoom, String name) {
+    return listRoom.stream().filter(room -> name.equals(room.getName())).findFirst().orElse(null);
+  }
+
+  public static Direction findByDirectionName(
+          Collection<Direction> listDirection, String[] directionName) {
+    return listDirection.stream()
+            .filter(direction -> directionName[1].equals(direction.getDirectionName().toLowerCase()))
+            .findFirst()
+            .orElse(null);
+  }
+
   private static void textOutput(
       String description, List<String> directionNames, List<String> items) {
     System.out.println(
@@ -111,18 +123,6 @@ public class State {
     for (Direction direction : room.getDirections()) {
       directionNames.add(direction.getDirectionName());
     }
-  }
-
-  private static Room findByRoomName(Collection<Room> listRoom, String name) {
-    return listRoom.stream().filter(room -> name.equals(room.getName())).findFirst().orElse(null);
-  }
-
-  private static Direction findByDirectionName(
-      Collection<Direction> listDirection, String[] directionName) {
-    return listDirection.stream()
-        .filter(direction -> directionName[1].equals(direction.getDirectionName().toLowerCase()))
-        .findFirst()
-        .orElse(null);
   }
 
   private static boolean isNull(Object object) {
