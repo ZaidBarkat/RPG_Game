@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/** Game engine of adventure, changes variable values through methods. */
 public class State {
   public static Room room;
   public static String description = null;
@@ -25,6 +26,9 @@ public class State {
     }
   }
 
+  /**
+   * Used to start the adventure game, initializes the variables as the starting room in the layout.
+   */
   public static void startState() {
     Room startingRoom = findByRoomName(layout.getRooms(), layout.getStartingRoom());
     room = startingRoom;
@@ -36,6 +40,12 @@ public class State {
     textOutput();
   }
 
+  /**
+   * Ran everytime an input starts with go, changed the variables depending on which way the
+   * direction goes.
+   *
+   * @param input user input array used to check if the direction is valid
+   */
   public static void goState(String[] input) {
     Direction direction;
 
@@ -60,7 +70,7 @@ public class State {
 
     addDirectionNames();
 
-    if (currentRoom.getName().equals(layout.getEndingRoom())) {
+    if (winCondition()) {
       System.out.println(description);
       return;
     }
@@ -68,10 +78,17 @@ public class State {
     textOutput();
   }
 
+  /** If examine is called, restates the variables. */
   public static void examineState() {
     textOutput();
   }
 
+  /**
+   * If items list contains the item, then move it to an inventory list and take it out of the item
+   * list.
+   *
+   * @param input used to make sure the item is in the items list
+   */
   public static void takeState(String[] input) {
     if (items.contains(input[1])) {
       inventory.add(input[1]);
@@ -81,6 +98,12 @@ public class State {
     }
   }
 
+  /**
+   * If inventory list contains the item, then move it to an item list and take it out of the
+   * inventory list.
+   *
+   * @param input used to make sure the item is in the items list
+   */
   public static void dropState(String[] input) {
     if (inventory.contains(input[1])) {
       items.add(input[1]);
@@ -90,10 +113,22 @@ public class State {
     }
   }
 
+  /**
+   * Checks to see if the room objects name is the ending room.
+   *
+   * @return true if you are in the ending room
+   */
   public static boolean winCondition() {
     return room.getName().equals(layout.getEndingRoom());
   }
 
+  /**
+   * Stream used to find a room just by the room name.
+   *
+   * @param listRoom The room list
+   * @param roomName the string of the room name
+   * @return the room object or null if not found
+   */
   public static Room findByRoomName(Collection<Room> listRoom, String roomName) {
     return listRoom.stream()
         .filter(room -> roomName.equals(room.getName()))
@@ -101,6 +136,13 @@ public class State {
         .orElse(null);
   }
 
+  /**
+   * Stream used to find direction object through direction name.
+   *
+   * @param listDirection list of directions
+   * @param directionName name of direction
+   * @return direction object
+   */
   public static Direction findByDirectionName(
       Collection<Direction> listDirection, String[] directionName) {
     return listDirection.stream()
@@ -109,6 +151,7 @@ public class State {
         .orElse(null);
   }
 
+  /** Illustrating the description, directionNames, and Items in the current room. */
   private static void textOutput() {
     System.out.println(
         description
@@ -120,12 +163,19 @@ public class State {
             + items);
   }
 
+  /** Used to add directionNames into a list from the room objects. */
   private static void addDirectionNames() {
     for (Direction direction : room.getDirections()) {
       directionNames.add(direction.getDirectionName());
     }
   }
 
+  /**
+   * Checking if an object is null.
+   *
+   * @param object that is being checked
+   * @return true if object is null
+   */
   private static boolean isNull(Object object) {
     return object == null;
   }
