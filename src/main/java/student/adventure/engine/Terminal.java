@@ -1,27 +1,35 @@
-package student.adventure.gameEngine;
+package student.adventure.engine;
 
 import java.util.Scanner;
 
 /** Used to establish the user's input and check what that input is. */
-public class Input {
+public class Terminal {
   /**
    * Prompt before any input, and turns input into string array to make it easier to check string.
    *
    * @return a string array of the user's input
    */
-  public static String[] userInput() {
-    final String P = ">";
+  public String userInput() {
+    final String p = ">";
     Scanner input = new Scanner(System.in);
-    System.out.print(P);
-    String[] inputString = input.nextLine().toLowerCase().split("\\W+");
+    System.out.print(p);
+    
+    return input.nextLine();
+  }
 
-    if ((inputString.length == 1 || inputString.length >= 3)
-        && !(Input.isQuit(inputString[0]))
-        && !(Input.isExamine(inputString[0]))) {
-      return new String[] {" ", " "};
+  public String[] handleInput(String inputString) {
+    Terminal terminal = new Terminal();
+
+    String[] inputArray = inputString.toLowerCase().split("\\W+");
+
+    if ((inputArray.length == 1 || inputArray.length >= 3)
+            && !terminal.isQuit(inputArray[0])
+            && !terminal.isExamine(inputArray[0])
+            && !terminal.isHistory(inputArray[0])) {
+      return new String[] {" "};
     }
 
-    return inputString;
+    return inputArray;
   }
 
   /**
@@ -30,7 +38,7 @@ public class Input {
    * @param input user input
    * @return boolean of user input
    */
-  public static boolean isQuit(String input) {
+  public boolean isQuit(String input) {
     return input.contains("quit") || input.contains("exit");
   }
 
@@ -40,7 +48,7 @@ public class Input {
    * @param input user input
    * @return boolean of user input
    */
-  public static boolean isGo(String input) {
+  public boolean isGo(String input) {
     return input.contains("go");
   }
 
@@ -50,7 +58,7 @@ public class Input {
    * @param input user input
    * @return boolean of user input
    */
-  public static boolean isExamine(String input) {
+  public boolean isExamine(String input) {
     return input.contains("examine");
   }
 
@@ -60,7 +68,7 @@ public class Input {
    * @param input user input
    * @return boolean of user input
    */
-  public static boolean isTake(String input) {
+  public boolean isTake(String input) {
     return input.contains("take");
   }
 
@@ -70,7 +78,15 @@ public class Input {
    * @param input user input
    * @return boolean of user input
    */
-  public static boolean isDrop(String input) {
+  public boolean isDrop(String input) {
     return input.contains("drop");
+  }
+
+  public boolean isHistory(String input) {
+    return input.contains("history");
+  }
+
+  public void terminalOutput(String result) {
+    System.out.println(result);
   }
 }

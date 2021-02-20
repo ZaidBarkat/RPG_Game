@@ -57,6 +57,7 @@
     {
       "name": "Cafeteria",
       "description": "The cafeteria is empty, along with the kitchen, bathroom, and lounge.",
+      "items": [],
       "directions": [
         {
           "directionName": "NorthEast",
@@ -123,6 +124,7 @@
     {
       "name": "Vent",
       "description": "You are finally through the vent, only a door preventing your freedom.",
+      "items": [],
       "directions": [
         {
           "directionName": "North",
@@ -137,6 +139,7 @@
     {
       "name": "Outside",
       "description": "You made it, you're free... but what lies in the future is unknown.",
+      "items": [],
       "directions": [
         {
           "directionName": "South",
