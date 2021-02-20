@@ -13,7 +13,7 @@ public class Terminal {
     final String p = ">";
     Scanner input = new Scanner(System.in);
     System.out.print(p);
-    
+
     return input.nextLine();
   }
 

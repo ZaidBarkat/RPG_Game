@@ -18,6 +18,7 @@ public class GameEngine {
   private List<String> inventory = new ArrayList<>();
   private List<String> playerPath = new ArrayList<>();
   private Layout layout;
+  private int instanceId;
 
    {
     try {
@@ -26,6 +27,12 @@ public class GameEngine {
       e.printStackTrace();
     }
   }
+
+  public GameEngine(int id) {
+     instanceId = id;
+  }
+
+  public GameEngine() {}
 
   /**
    * Used to start the adventure game, initializes the variables as the starting room in the layout.
@@ -186,5 +193,13 @@ public class GameEngine {
 
   public List<String> getInventory() {
     return inventory;
+  }
+
+  public int getInstanceId() {
+    return instanceId;
+  }
+
+  public List<String> getDirectionNames() {
+    return directionNames;
   }
 }
