@@ -95,8 +95,22 @@ public class PrisonAdventure implements AdventureService {
      */
     @Override
     public void executeCommand(int id, Command command) {
+        GameEngine gameEngine = findByGameEngineId(gameEngines, id);
 
-
+        switch (command.getCommandName()) {
+            case "go":
+                gameEngine.goState(command.getCommandValue());
+                break;
+            case "history":
+                gameEngine.historyState();
+                break;
+            case "take":
+                gameEngine.takeState(command.getCommandValue());
+                break;
+            case "drop":
+                gameEngine.dropState(command.getCommandValue());
+                break;
+        }
     }
 
     /**
@@ -109,7 +123,7 @@ public class PrisonAdventure implements AdventureService {
         return null;
     }
 
-    public GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
+    private GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
         return gameEngine.stream()
                 .filter(game -> id == game.getInstanceId())
                 .findFirst()

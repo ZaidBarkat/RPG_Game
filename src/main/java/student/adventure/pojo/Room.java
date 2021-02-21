@@ -42,9 +42,9 @@ public class Room {
    * @return direction object
    */
   public Direction findByDirectionName(
-          Collection<Direction> listDirection, String[] directionName) {
+          Collection<Direction> listDirection, String directionName) {
     return listDirection.stream()
-            .filter(direction -> directionName[1].equals(direction.getDirectionName().toLowerCase()))
+            .filter(direction -> directionName.equals(direction.getDirectionName().toLowerCase()))
             .findFirst()
             .orElse(null);
   }

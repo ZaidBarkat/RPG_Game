@@ -53,11 +53,11 @@ public class GameEngine {
    *
    * @param input user input array used to check if the direction is valid
    */
-  public String goState(String[] input) {
+  public String goState(String input) {
     Direction direction;
 
     if (room.findByDirectionName(room.getDirections(), input) == null) {
-      return "You can't go " + input[1];
+      return "You can't go " + input;
     } else {
       direction = room.findByDirectionName(room.getDirections(), input);
     }
@@ -88,12 +88,12 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String takeState(String[] input) {
-    if (room.getItems().contains(input[1])) {
-      inventory.add(input[1]);
-      room.getItems().remove(input[1]);
+  public String takeState(String input) {
+    if (room.getItems().contains(input)) {
+      inventory.add(input);
+      room.getItems().remove(input);
     } else {
-      return "There is no item " + input[1] + " in the room";
+      return "There is no item " + input + " in the room";
     }
 
     return "took";
@@ -105,12 +105,12 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String dropState(String[] input) {
-    if (inventory.contains(input[1])) {
-      room.getItems().add(input[1]);
-      inventory.remove(input[1]);
+  public String dropState(String input) {
+    if (inventory.contains(input)) {
+      room.getItems().add(input);
+      inventory.remove(input);
     } else {
-      return "You don't have " + input[1] + "!";
+      return "You don't have " + input + "!";
     }
 
     return "dropped";
@@ -160,7 +160,7 @@ public class GameEngine {
     Terminal terminal = new Terminal();
 
     if (terminal.isGo(inputArray[0])) {
-      terminal.terminalOutput(goState(inputArray));
+      terminal.terminalOutput(goState(inputArray[1]));
 
     } else if (terminal.isExamine(inputArray[0])) {
       terminal.terminalOutput(examineState());
@@ -169,10 +169,10 @@ public class GameEngine {
       isGameDone = true;
 
     } else if (terminal.isTake(inputArray[0])) {
-      terminal.terminalOutput(takeState(inputArray));
+      terminal.terminalOutput(takeState(inputArray[1]));
 
     } else if (terminal.isDrop(inputArray[0])) {
-      terminal.terminalOutput(dropState(inputArray));
+      terminal.terminalOutput(dropState(inputArray[1]));
 
     } else if (terminal.isHistory(inputArray[0])) {
       terminal.terminalOutput(historyState());
