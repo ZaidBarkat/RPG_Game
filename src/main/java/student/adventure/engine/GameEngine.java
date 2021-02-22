@@ -178,7 +178,7 @@ public class GameEngine {
     return "";
   }
 
-  public GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
+  public static GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
     return gameEngine.stream().filter(game -> id == game.getInstanceId()).findFirst().orElse(null);
   }
 

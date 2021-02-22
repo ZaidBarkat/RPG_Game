@@ -52,7 +52,7 @@ public class PrisonAdventure implements AdventureService {
     boolean exception = false;
     String message;
     String sound = "https://www.youtube.com/watch?v=ipNqY9wHPqg";
-    GameEngine gameEngine = findByGameEngineId(gameEngines, id);
+    GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
     HashMap<String, List<String>> commandOptions = new HashMap<>();
     List<String> path = new ArrayList<>();
 
@@ -97,11 +97,11 @@ public class PrisonAdventure implements AdventureService {
    */
   @Override
   public boolean destroyGame(int id) {
-    if (findByGameEngineId(gameEngines, id) == null) {
+    if (GameEngine.findByGameEngineId(gameEngines, id) == null) {
       return false;
     }
 
-    GameEngine gameEngine = findByGameEngineId(gameEngines, id);
+    GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
 
     gameEngines.remove(gameEngine);
     return true;
@@ -116,7 +116,7 @@ public class PrisonAdventure implements AdventureService {
    */
   @Override
   public void executeCommand(int id, Command command) {
-    GameEngine gameEngine = findByGameEngineId(gameEngines, id);
+    GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
 
     commands[0] = command.getCommandName();
     commands[1] = command.getCommandValue();
