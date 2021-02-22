@@ -8,6 +8,7 @@ import student.adventure.pojo.Room;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /** Game engine of adventure, changes variable values through methods. */
@@ -151,6 +152,34 @@ public class GameEngine {
     for (Direction direction : room.getDirections()) {
       directionNames.add(direction.getDirectionName());
     }
+  }
+
+  public String runGame(String[] inputArray, GameEngine gameEngine) {
+
+    if (inputArray[0].contains("go")) {
+      return gameEngine.handleGoCommand(inputArray[1]);
+
+    } else if (inputArray[0].contains("examine")) {
+      return gameEngine.handleExamineCommand();
+
+    } else if (inputArray[0].contains("quit") || inputArray[0].contains("exit")) {
+      gameEngine.setGameDone(true);
+      return "Thanks For Playing";
+
+    } else if (inputArray[0].contains("take")) {
+      return gameEngine.handleTakeCommand(inputArray[1]);
+
+    } else if (inputArray[0].contains("drop")) {
+      return gameEngine.handleDropCommand(inputArray[1]);
+
+    } else if (inputArray[0].contains("history")) {
+      return gameEngine.handleHistoryCommand();
+    }
+    return "";
+  }
+
+  public GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
+    return gameEngine.stream().filter(game -> id == game.getInstanceId()).findFirst().orElse(null);
   }
 
   public Room getRoom() {
