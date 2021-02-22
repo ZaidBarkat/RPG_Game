@@ -8,170 +8,191 @@ import student.adventure.engine.Terminal;
 import student.adventure.pojo.Layout;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameEngineTest {
   Layout layout;
-  GameEngine gameEngine = new GameEngine();
+  GameEngine gameEngine;
   Terminal terminal = new Terminal();
+  String[] input;
 
   @Before
-  public void setUp() throws IOException {
-    layout = gameEngine.file("src/main/resources/prison.json");
+  public void setUp() {
+    gameEngine = new GameEngine();
+    layout = gameEngine.getLayout();
   }
 
   @Test
-  public void testStartState() {
-    gameEngine.startState();
+  public void testHandleStartCommand() {
+    gameEngine.handleStartCommand();
 
     Assert.assertEquals(layout.getStartingRoom(), gameEngine.getRoom().getName());
   }
 
   @Test
-  public void testValidGoState() {
+  public void testValidHandleGoCommand() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
 
-    gameEngine.goState(terminal.handleInput("go east"));
+    terminal.runGameFromTerminal(terminal.handleInput("go east"), gameEngine);
 
     Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
   }
 
   @Test
-  public void testValidGoStateWithSpace() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+  public void testValidHandleGoCommandWithSpace() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Cafeteria"));
 
-    gameEngine.goState(terminal.handleInput("go                east"));
-
-    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-  }
-
-  @Test
-  public void testValidGoStateWithTrailingSpace() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.goState(terminal.handleInput("go       east            "));
-
-    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-  }
-
-  @Test
-  public void testValidGoStateCapitalLetters() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.goState(terminal.handleInput("go EAST"));
-
-    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-  }
-
-  @Test
-  public void testValidGoStateCapitalAndLowerCase() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.goState(terminal.handleInput("go eAsT"));
-
-    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-  }
-
-  @Test
-  public void testInvalidGoState() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.goState(terminal.handleInput("go      HerE"));
+    terminal.runGameFromTerminal(terminal.handleInput("go                WeSt"), gameEngine);
 
     Assert.assertEquals("Bathroom", gameEngine.getRoom().getName());
   }
 
   @Test
-  public void testExamineState() {
+  public void testValidHandleGoCommandWithTrailingSpace() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Hallway"));
+
+    terminal.runGameFromTerminal(
+        terminal.handleInput("go       SouthEast            "), gameEngine);
+
+    Assert.assertEquals("Cell Block B", gameEngine.getRoom().getName());
+  }
+
+  @Test
+  public void testValidHandleGoCommandCapitalLetters() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
 
-    gameEngine.examineState();
+    terminal.runGameFromTerminal(terminal.handleInput("go EAST"), gameEngine);
+
+    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
+  }
+
+  @Test
+  public void testValidHandleGoCommandCapitalAndLowerCase() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("Go eAsT"), gameEngine);
+
+    Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
+  }
+
+  @Test
+  public void testInvalidHandleGoCommand() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("gO      HerE"), gameEngine);
 
     Assert.assertEquals("Bathroom", gameEngine.getRoom().getName());
   }
 
   @Test
-  public void testInvalidTakeState() {
+  public void testHandleExamineCommand() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Cell Block A"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("exAmIne"), gameEngine);
+
+    Assert.assertEquals("Cell Block A", gameEngine.getRoom().getName());
+  }
+
+  @Test
+  public void testHandleHistoryCommand() {
+    ArrayList<String> playerPathTest = new ArrayList<>();
+
+    playerPathTest.add("Cell Block A");
+    playerPathTest.add("Hallway");
+
+    gameEngine.handleStartCommand();
+
+    terminal.runGameFromTerminal(terminal.handleInput("Go West"), gameEngine);
+    terminal.runGameFromTerminal(terminal.handleInput("HIStORY"), gameEngine);
+
+    Assert.assertEquals(playerPathTest, gameEngine.getPlayerPath());
+  }
+
+  @Test
+  public void testInvalidHandleTakeCommand() {
     gameEngine.getInventory().clear();
 
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
 
-    gameEngine.takeState(terminal.handleInput("take    SomeThing"));
-
-    Assert.assertTrue(gameEngine.getInventory().isEmpty());
-  }
-
-  @Test
-  public void testValidTakeState() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take id"));
-
-    Assert.assertTrue(gameEngine.getInventory().contains("id"));
-  }
-
-  @Test
-  public void testValidTakeStateLeadingSpaces() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take       id"));
-
-    Assert.assertTrue(gameEngine.getInventory().contains("id"));
-  }
-
-  @Test
-  public void testValidTakeStateTrailingSpaces() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take   id        "));
-
-    Assert.assertTrue(gameEngine.getInventory().contains("id"));
-  }
-
-  @Test
-  public void testValidTakeStateCapitalAndLowerCases() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take   iD        "));
-
-    Assert.assertTrue(gameEngine.getInventory().contains("id"));
-  }
-
-  @Test
-  public void testInvalidDropState() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take   iD        "));
-    gameEngine.dropState(terminal.handleInput("drop    something        "));
-
-    Assert.assertTrue(gameEngine.getInventory().contains("id"));
-  }
-
-  @Test
-  public void testValidDropState() {
-    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-    gameEngine.takeState(terminal.handleInput("take   iD   "));
-    gameEngine.dropState(terminal.handleInput("drop   iD "));
+    terminal.runGameFromTerminal(terminal.handleInput("take      someThIng"), gameEngine);
 
     Assert.assertTrue(gameEngine.getInventory().isEmpty());
   }
 
   @Test
-  public void testValidDropStateTrailingSpaces() {
+  public void testValidHandleTakeCommand() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("take cup"), gameEngine);
+
+    Assert.assertTrue(
+        gameEngine.getInventory().contains("cup")
+            && !gameEngine.getRoom().getItems().contains("cup"));
+  }
+
+  @Test
+  public void testValidHandleTakeCommandLeadingSpaces() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
 
-    gameEngine.takeState(terminal.handleInput("take   iD        "));
-    gameEngine.dropState(terminal.handleInput("drop   iD        "));
+    terminal.runGameFromTerminal(terminal.handleInput("take       id"), gameEngine);
+
+    Assert.assertTrue(gameEngine.getInventory().contains("id"));
+  }
+
+  @Test
+  public void testValidHandleTakeCommandTrailingSpaces() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("Take   id        "), gameEngine);
+
+    Assert.assertTrue(gameEngine.getInventory().contains("id"));
+  }
+
+  @Test
+  public void testValidHandleTakeCommandCapitalAndLowerCases() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("tAkE   iD        "), gameEngine);
+
+    Assert.assertTrue(gameEngine.getInventory().contains("id"));
+  }
+
+  @Test
+  public void testInvalidHandleDropCommand() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("take   iD        "), gameEngine);
+    terminal.runGameFromTerminal(terminal.handleInput("drop    something        "), gameEngine);
+
+    Assert.assertTrue(gameEngine.getInventory().contains("id"));
+  }
+
+  @Test
+  public void testValidHandleDropCommand() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("tAkE   CuP   "), gameEngine);
+    terminal.runGameFromTerminal(terminal.handleInput("dRoP   Cup "), gameEngine);
 
     Assert.assertTrue(gameEngine.getInventory().isEmpty());
   }
 
   @Test
-  public void testValidDropStateLeadingSpaces() {
+  public void testValidHandleDropCommandTrailingSpaces() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
 
-    gameEngine.takeState(terminal.handleInput("take   iD        "));
-    gameEngine.dropState(terminal.handleInput("drop              iD        "));
+    terminal.runGameFromTerminal(terminal.handleInput("take   iD        "), gameEngine);
+    terminal.runGameFromTerminal(terminal.handleInput("drop   iD        "), gameEngine);
+
+    Assert.assertTrue(gameEngine.getInventory().isEmpty());
+  }
+
+  @Test
+  public void testValidHandleDropCommandLeadingSpaces() {
+    gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+
+    terminal.runGameFromTerminal(terminal.handleInput("take   iD        "), gameEngine);
+    terminal.runGameFromTerminal(terminal.handleInput("drop              iD        "), gameEngine);
 
     Assert.assertTrue(gameEngine.getInventory().isEmpty());
   }
@@ -180,7 +201,7 @@ public class GameEngineTest {
   public void testWinCondition() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Vent"));
 
-    gameEngine.goState(new String[] {"go", "south"});
+    terminal.runGameFromTerminal(terminal.handleInput("go    SoUth"), gameEngine);
 
     Assert.assertTrue(gameEngine.isWinCondition());
   }

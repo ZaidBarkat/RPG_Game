@@ -20,31 +20,36 @@ public class GameEngine {
   private Layout layout;
   private int instanceId;
 
-   {
-    try {
-      layout = file("src/main/resources/prison.json");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public GameEngine(int id) {
      instanceId = id;
+     try {
+        layout = Layout.file("src/main/resources/prison.json");
+     } catch(Exception e) {
+       e.printStackTrace();
+       layout = null;
+     }
   }
 
-  public GameEngine() {}
+  public GameEngine() {
+    try {
+      layout = Layout.file("src/main/resources/prison.json");
+    } catch(Exception e) {
+      e.printStackTrace();
+      layout = null;
+    }
+  }
 
   /**
    * Used to start the adventure game, initializes the variables as the starting room in the layout.
    */
-  public String startState() {
+  public String handleStartCommand() {
     room = layout.findByRoomName(layout.getRooms(), layout.getStartingRoom());
 
     addDirectionNames();
 
     playerPath.add(layout.getStartingRoom());
 
-    return textOutput();
+    return generatePrint();
   }
 
   /**
@@ -53,7 +58,7 @@ public class GameEngine {
    *
    * @param input user input array used to check if the direction is valid
    */
-  public String goState(String input) {
+  public String handleGoCommand(String input) {
     Direction direction;
 
     if (room.findByDirectionName(room.getDirections(), input) == null) {
@@ -74,12 +79,12 @@ public class GameEngine {
       return room.getDescription();
     }
 
-    return textOutput();
+    return generatePrint();
   }
 
   /** If examine is called, restates the variables. */
-  public String examineState() {
-    return textOutput();
+  public String handleExamineCommand() {
+    return generatePrint();
   }
 
   /**
@@ -88,7 +93,7 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String takeState(String input) {
+  public String handleTakeCommand(String input) {
     if (room.getItems().contains(input)) {
       inventory.add(input);
       room.getItems().remove(input);
@@ -105,7 +110,7 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String dropState(String input) {
+  public String handleDropCommand(String input) {
     if (inventory.contains(input)) {
       room.getItems().add(input);
       inventory.remove(input);
@@ -116,7 +121,7 @@ public class GameEngine {
     return "dropped";
   }
 
-  public String historyState() {
+  public String handleHistoryCommand() {
     return "Path Taken: " + playerPath;
   }
 
@@ -130,7 +135,7 @@ public class GameEngine {
   }
 
   /** Illustrating the description, directionNames, and Items in the current room. */
-  private String textOutput() {
+  private String generatePrint() {
     return
         room.getDescription()
             + "\n"
@@ -148,37 +153,6 @@ public class GameEngine {
     }
   }
 
-  public Layout file(String path) throws IOException {
-    if (path == null || !(path.equals("src/main/resources/prison.json"))) {
-      throw new IllegalArgumentException("Cannot parse invalid JSON file.");
-    }
-    File file = new File(path);
-    return new ObjectMapper().readValue(file, Layout.class);
-  }
-
-  public void runGameFromTerminal(String[] inputArray) {
-    Terminal terminal = new Terminal();
-
-    if (terminal.isGo(inputArray[0])) {
-      terminal.terminalOutput(goState(inputArray[1]));
-
-    } else if (terminal.isExamine(inputArray[0])) {
-      terminal.terminalOutput(examineState());
-
-    } else if (terminal.isQuit(inputArray[0])) {
-      isGameDone = true;
-
-    } else if (terminal.isTake(inputArray[0])) {
-      terminal.terminalOutput(takeState(inputArray[1]));
-
-    } else if (terminal.isDrop(inputArray[0])) {
-      terminal.terminalOutput(dropState(inputArray[1]));
-
-    } else if (terminal.isHistory(inputArray[0])) {
-      terminal.terminalOutput(historyState());
-    }
-  }
-
   public Room getRoom() {
     return room;
   }
@@ -191,6 +165,10 @@ public class GameEngine {
     return isGameDone;
   }
 
+  public void setGameDone(boolean gameDone) {
+    isGameDone = gameDone;
+  }
+
   public List<String> getInventory() {
     return inventory;
   }
@@ -201,5 +179,13 @@ public class GameEngine {
 
   public List<String> getDirectionNames() {
     return directionNames;
+  }
+
+  public Layout getLayout() {
+    return layout;
+  }
+
+  public List<String> getPlayerPath() {
+    return playerPath;
   }
 }

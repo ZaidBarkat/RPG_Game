@@ -9,17 +9,14 @@ public class Room {
   private String description;
   private List<String> items;
   private List<Direction> directions;
+  private String image;
+
+  public String getImage() {
+    return image;
+  }
 
   public String getName() {
     return name;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public void setItems(List<String> items) {
-    this.items = items;
   }
 
   public String getDescription() {

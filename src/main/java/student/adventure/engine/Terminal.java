@@ -9,7 +9,7 @@ public class Terminal {
    *
    * @return a string array of the user's input
    */
-  public String userInput() {
+  public String getUserInput() {
     final String p = ">";
     Scanner input = new Scanner(System.in);
     System.out.print(p);
@@ -18,75 +18,37 @@ public class Terminal {
   }
 
   public String[] handleInput(String inputString) {
-    Terminal terminal = new Terminal();
-
     String[] inputArray = inputString.toLowerCase().split("\\W+");
 
     if ((inputArray.length == 1 || inputArray.length >= 3)
-            && !terminal.isQuit(inputArray[0])
-            && !terminal.isExamine(inputArray[0])
-            && !terminal.isHistory(inputArray[0])) {
+            && !(inputArray[0].contains("quit") || inputArray[0].contains("exit"))
+            && !inputArray[0].contains("examine")
+            && !inputArray[0].contains("history")) {
       return new String[] {" "};
     }
 
     return inputArray;
   }
 
-  /**
-   * Checking if user input contains quit or exit keywords.
-   *
-   * @param input user input
-   * @return boolean of user input
-   */
-  public boolean isQuit(String input) {
-    return input.contains("quit") || input.contains("exit");
-  }
+  public void runGameFromTerminal(String[] inputArray, GameEngine gameEngine) {
 
-  /**
-   * Checking if user input contains go keyword.
-   *
-   * @param input user input
-   * @return boolean of user input
-   */
-  public boolean isGo(String input) {
-    return input.contains("go");
-  }
+    if (inputArray[0].contains("go")) {
+      System.out.println(gameEngine.handleGoCommand(inputArray[1]));
 
-  /**
-   * Checking if user input contains examine keyword.
-   *
-   * @param input user input
-   * @return boolean of user input
-   */
-  public boolean isExamine(String input) {
-    return input.contains("examine");
-  }
+    } else if (inputArray[0].contains("examine")) {
+      System.out.println(gameEngine.handleExamineCommand());
 
-  /**
-   * Checking if user input contains take keyword.
-   *
-   * @param input user input
-   * @return boolean of user input
-   */
-  public boolean isTake(String input) {
-    return input.contains("take");
-  }
+    } else if (inputArray[0].contains("quit") || inputArray[0].contains("exit")) {
+      gameEngine.setGameDone(true);
 
-  /**
-   * Checking if user input contains drop keyword.
-   *
-   * @param input user input
-   * @return boolean of user input
-   */
-  public boolean isDrop(String input) {
-    return input.contains("drop");
-  }
+    } else if (inputArray[0].contains("take")) {
+      System.out.println(gameEngine.handleTakeCommand(inputArray[1]));
 
-  public boolean isHistory(String input) {
-    return input.contains("history");
-  }
+    } else if (inputArray[0].contains("drop")) {
+      System.out.println(gameEngine.handleDropCommand(inputArray[1]));
 
-  public void terminalOutput(String result) {
-    System.out.println(result);
+    } else if (inputArray[0].contains("history")) {
+      System.out.println(gameEngine.handleHistoryCommand());
+    }
   }
 }

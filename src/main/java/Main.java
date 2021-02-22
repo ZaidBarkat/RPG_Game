@@ -21,12 +21,12 @@ public class Main {
     HttpServer server = AdventureServer.createServer(AdventureResource.class);
     server.start();
 
-    terminal.terminalOutput(gameEngine.startState());
+    System.out.println(gameEngine.handleStartCommand());
 
     while (!gameEngine.isWinCondition()) {
-      String[] inputArray = terminal.handleInput(terminal.userInput());
+      String[] inputArray = terminal.handleInput(terminal.getUserInput());
 
-      gameEngine.runGameFromTerminal(inputArray);
+      terminal.runGameFromTerminal(inputArray, gameEngine);
 
       if (gameEngine.isGameDone()) {
         break;
