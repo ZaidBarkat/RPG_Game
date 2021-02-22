@@ -26,7 +26,7 @@ public class Main {
     while (!gameEngine.isWinCondition()) {
       String[] inputArray = terminal.handleInput(terminal.getUserInput());
 
-      terminal.runGameFromTerminal(inputArray, gameEngine);
+      System.out.println(gameEngine.runGame(inputArray, gameEngine));
 
       if (gameEngine.isGameDone()) {
         break;
