@@ -13,7 +13,7 @@ import java.util.*;
 public class PrisonAdventure implements AdventureService {
   private int idValue = -1;
   private ArrayList<GameEngine> gameEngines = new ArrayList<>();
-  private String commandName;
+  private String[] commands = new String[2];
 
   /** Resets the service to its initial state. */
   @Override
@@ -57,7 +57,7 @@ public class PrisonAdventure implements AdventureService {
     List<String> path = new ArrayList<>();
 
     try {
-      if (commandName != null && commandName.equals("Traversed")) {
+      if (commands[0] != null && commands[0].equals("Traversed")) {
         message = gameEngine.getRoom().getDescription() + "\n" + gameEngine.handleHistoryCommand();
       } else {
         message = gameEngine.getRoom().getDescription();
@@ -75,14 +75,8 @@ public class PrisonAdventure implements AdventureService {
     commandOptions.put("drop", gameEngine.getInventory());
 
     if (gameEngine.isWinCondition()) {
-      return new GameStatus(
-          exception,
-          id,
-          message,
-          gameEngine.getRoom().getImage(),
-          null,
-          new AdventureState(),
-          new HashMap<>());
+      sound = null;
+      commandOptions = new HashMap<>();
     }
 
     return new GameStatus(
@@ -124,19 +118,10 @@ public class PrisonAdventure implements AdventureService {
   public void executeCommand(int id, Command command) {
     GameEngine gameEngine = findByGameEngineId(gameEngines, id);
 
-    commandName = command.getCommandName();
+    commands[0] = command.getCommandName();
+    commands[1] = command.getCommandValue();
 
-    switch (command.getCommandName()) {
-      case "go":
-        gameEngine.handleGoCommand(command.getCommandValue().toLowerCase());
-        break;
-      case "take":
-        gameEngine.handleTakeCommand(command.getCommandValue().toLowerCase());
-        break;
-      case "drop":
-        gameEngine.handleDropCommand(command.getCommandValue().toLowerCase());
-        break;
-    }
+    gameEngine.runGame(commands, gameEngine);
   }
 
   /**
@@ -149,7 +134,13 @@ public class PrisonAdventure implements AdventureService {
     return null;
   }
 
-  private GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
-    return gameEngine.stream().filter(game -> id == game.getInstanceId()).findFirst().orElse(null);
+
+
+  public int getIdValue() {
+    return idValue;
+  }
+
+  public ArrayList<GameEngine> getGameEngines() {
+    return gameEngines;
   }
 }

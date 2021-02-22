@@ -29,26 +29,4 @@ public class Terminal {
 
     return inputArray;
   }
-
-  public void runGameFromTerminal(String[] inputArray, GameEngine gameEngine) {
-
-    if (inputArray[0].contains("go")) {
-      System.out.println(gameEngine.handleGoCommand(inputArray[1]));
-
-    } else if (inputArray[0].contains("examine")) {
-      System.out.println(gameEngine.handleExamineCommand());
-
-    } else if (inputArray[0].contains("quit") || inputArray[0].contains("exit")) {
-      gameEngine.setGameDone(true);
-
-    } else if (inputArray[0].contains("take")) {
-      System.out.println(gameEngine.handleTakeCommand(inputArray[1]));
-
-    } else if (inputArray[0].contains("drop")) {
-      System.out.println(gameEngine.handleDropCommand(inputArray[1]));
-
-    } else if (inputArray[0].contains("history")) {
-      System.out.println(gameEngine.handleHistoryCommand());
-    }
-  }
 }
