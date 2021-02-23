@@ -38,9 +38,4 @@ public class JsonTest {
   public void testInvalidJsonFileSyntacticallyCorrect() throws IOException {
     Layout layoutFile = Layout.file("src/main/resources/jsontest.json");
   }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testInvalidJsonFileRoomDoesNotExist() throws IOException {
-    Layout layoutFile = Layout.file("src/main/resources/roomtest.json");
-  }
 }

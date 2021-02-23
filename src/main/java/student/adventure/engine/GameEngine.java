@@ -21,27 +21,52 @@ public class GameEngine {
   private Layout layout;
   private int instanceId;
 
+  /**
+   * Create gameEngine with id for API, sets json file
+   *
+   * @param id to keep track of instances of GameEngine
+   */
   public GameEngine(int id) {
-     instanceId = id;
-     try {
-        layout = Layout.file("src/main/resources/prison.json");
-     } catch(Exception e) {
-       e.printStackTrace();
-       layout = null;
-     }
-  }
-
-  public GameEngine() {
+    instanceId = id;
     try {
       layout = Layout.file("src/main/resources/prison.json");
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
       layout = null;
     }
   }
 
   /**
-   * Used to start the adventure game, initializes the variables as the starting room in the layout.
+   * GameEngine constructor, sets json file
+   */
+  public GameEngine() {
+    try {
+      layout = Layout.file("src/main/resources/prison.json");
+    } catch (Exception e) {
+      e.printStackTrace();
+      layout = null;
+    }
+  }
+
+  /**
+   * static stream used to find GameEngine object by id value
+   *
+   * @param gameEngine list of GameEngine instances
+   * @param id to find GameEngine object
+   * @return GameEngine or null if none found
+   */
+  public static GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
+    return gameEngine.stream()
+            .filter(game -> id == game.getInstanceId())
+            .findFirst()
+            .orElse(null);
+  }
+
+  /**
+   * Start command, sets room based on starting room and adds direction names (North, South, etc..)
+   * to list, also adding room name to player path
+   *
+   * @return A string of what is to be displayed
    */
   public String handleStartCommand() {
     room = layout.findByRoomName(layout.getRooms(), layout.getStartingRoom());
@@ -54,12 +79,13 @@ public class GameEngine {
   }
 
   /**
-   * Ran everytime an input starts with go, changed the variables depending on which way the
-   * direction goes.
+   * Go command, sets room based on direction name, while creating new directions and adding the
+   * room to the player path
    *
-   * @param input user input array used to check if the direction is valid
+   * @param input Of direction name such as (North, South, East, etc..)
+   * @return a String of what is to be displayed
    */
-  public String handleGoCommand(String input) {
+  private String handleGoCommand(String input) {
     Direction direction;
 
     if (room.findByDirectionName(room.getDirections(), input) == null) {
@@ -83,8 +109,8 @@ public class GameEngine {
     return generatePrint();
   }
 
-  /** If examine is called, restates the variables. */
-  public String handleExamineCommand() {
+  /** Examine command */
+  private String handleExamineCommand() {
     return generatePrint();
   }
 
@@ -94,7 +120,7 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String handleTakeCommand(String input) {
+  private String handleTakeCommand(String input) {
     if (room.getItems().contains(input)) {
       inventory.add(input);
       room.getItems().remove(input);
@@ -111,7 +137,7 @@ public class GameEngine {
    *
    * @param input used to make sure the item is in the items list
    */
-  public String handleDropCommand(String input) {
+  private String handleDropCommand(String input) {
     if (inventory.contains(input)) {
       room.getItems().add(input);
       inventory.remove(input);
@@ -137,14 +163,13 @@ public class GameEngine {
 
   /** Illustrating the description, directionNames, and Items in the current room. */
   private String generatePrint() {
-    return
-        room.getDescription()
-            + "\n"
-            + "From here, you can go: "
-            + directionNames
-            + "\n"
-            + "Items visible: "
-            + room.getItems();
+    return room.getDescription()
+        + "\n"
+        + "From here, you can go: "
+        + directionNames
+        + "\n"
+        + "Items visible: "
+        + room.getItems();
   }
 
   /** Used to add directionNames into a list from the room objects. */
@@ -176,10 +201,6 @@ public class GameEngine {
       return gameEngine.handleHistoryCommand();
     }
     return "";
-  }
-
-  public static GameEngine findByGameEngineId(Collection<GameEngine> gameEngine, int id) {
-    return gameEngine.stream().filter(game -> id == game.getInstanceId()).findFirst().orElse(null);
   }
 
   public Room getRoom() {

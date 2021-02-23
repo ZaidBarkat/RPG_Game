@@ -6,202 +6,109 @@ import org.junit.Test;
 import student.adventure.engine.GameEngine;
 import student.adventure.engine.Terminal;
 import student.adventure.pojo.Layout;
+import student.server.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.Assert.*;
+
 public class GameEngineTestApi {
-    Layout layout;
-    GameEngine gameEngine;
-    Terminal terminal = new Terminal();
+  PrisonAdventure service = new PrisonAdventure();
 
-    @Before
-    public void setUp() {
-        gameEngine = new GameEngine();
-        layout = gameEngine.getLayout();
-    }
+  @Test(expected = NullPointerException.class)
+  public void testResetPost() throws AdventureException {
+    service.newGame();
 
-    @Test
-    public void testResetCommand() {
-        gameEngine.handleStartCommand();
+    service.reset();
 
-        Assert.assertEquals(layout.getStartingRoom(), gameEngine.getRoom().getName());
-    }
+    service.getGame(0);
+  }
 
-    @Test
-    public void testValidHandleGoCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+  @Test
+  public void testNewGamePost() throws AdventureException {
+    service.newGame();
 
-        gameEngine.runGame(terminal.handleInput("go east"), gameEngine);
+    assertEquals("Cell Block A", service.getGameEngines().get(0).getRoom().getName());
+  }
 
-        Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-    }
+  @Test
+  public void testValidGetGame() throws AdventureException {
+    Command command = new Command("go", "west");
 
-    @Test
-    public void testValidHandleGoCommandWithSpace() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Cafeteria"));
+    service.newGame();
+    service.getGame(0);
 
-        gameEngine.runGame(terminal.handleInput("go                WeSt"), gameEngine);
+    service.executeCommand(0, command);
+    service.getGame(0);
 
-        Assert.assertEquals("Bathroom", gameEngine.getRoom().getName());
-    }
+    assertEquals("Hallway", service.getGameEngines().get(0).getRoom().getName());
+  }
 
-    @Test
-    public void testValidHandleGoCommandWithTrailingSpace() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Hallway"));
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidGetGameInvalidId() throws AdventureException {
+    service.newGame();
+    service.getGame(-1);
+  }
 
-        gameEngine.runGame(
-                terminal.handleInput("go       SouthEast            "), gameEngine);
+  @Test(expected = NullPointerException.class)
+  public void testInvalidGetGameIdNotCreated() throws AdventureException {
+    service.newGame();
+    service.getGame(4);
+  }
 
-        Assert.assertEquals("Cell Block B", gameEngine.getRoom().getName());
-    }
+  @Test
+  public void testValidExecuteCommandDifferentInstances() throws AdventureException {
+    Command command = new Command("go", "west");
 
-    @Test
-    public void testValidHandleGoCommandCapitalLetters() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+    service.newGame();
+    service.newGame();
 
-        gameEngine.runGame(terminal.handleInput("go EAST"), gameEngine);
+    service.getGame(0);
+    service.getGame(1);
 
-        Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-    }
+    service.executeCommand(0, command);
+    service.executeCommand(1, command);
+    service.getGame(0);
+    service.getGame(1);
 
-    @Test
-    public void testValidHandleGoCommandCapitalAndLowerCase() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+    assertEquals(
+        service.getGameEngines().get(0).getRoom().getName(),
+        service.getGameEngines().get(1).getRoom().getName());
+  }
 
-        gameEngine.runGame(terminal.handleInput("Go eAsT"), gameEngine);
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidExecuteCommandInvalidId() {
+    Command command = new Command("go", "west");
 
-        Assert.assertEquals("Cafeteria", gameEngine.getRoom().getName());
-    }
+    service.executeCommand(-1, command);
+  }
 
-    @Test
-    public void testInvalidHandleGoCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
+  @Test(expected = NullPointerException.class)
+  public void testInvalidExecuteCommandNoIdInstance() {
+    Command command = new Command("go", "west");
 
-        gameEngine.runGame(terminal.handleInput("gO      HerE"), gameEngine);
+    service.executeCommand(4, command);
+  }
 
-        Assert.assertEquals("Bathroom", gameEngine.getRoom().getName());
-    }
+  @Test
+  public void testValidDestroyGame() throws AdventureException {
+    service.newGame();
 
-    @Test
-    public void testHandleExamineCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Cell Block A"));
+    service.getGame(0);
 
-        gameEngine.runGame(terminal.handleInput("exAmIne"), gameEngine);
+    service.destroyGame(0);
 
-        Assert.assertEquals("Cell Block A", gameEngine.getRoom().getName());
-    }
+    assertTrue(service.getGameEngines().isEmpty());
+  }
 
-    @Test
-    public void testHandleHistoryCommand() {
-        ArrayList<String> playerPathTest = new ArrayList<>();
+  @Test
+  public void testValidDestroyGameNoInstanceId() {
+    assertFalse(service.destroyGame(4));
+  }
 
-        playerPathTest.add("Cell Block A");
-        playerPathTest.add("Hallway");
-
-        gameEngine.handleStartCommand();
-
-        gameEngine.runGame(terminal.handleInput("Go West"), gameEngine);
-        gameEngine.runGame(terminal.handleInput("HIStORY"), gameEngine);
-
-        Assert.assertEquals(playerPathTest, gameEngine.getPlayerPath());
-    }
-
-    @Test
-    public void testInvalidHandleTakeCommand() {
-        gameEngine.getInventory().clear();
-
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
-
-        gameEngine.runGame(terminal.handleInput("take      someThIng"), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().isEmpty());
-    }
-
-    @Test
-    public void testValidHandleTakeCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
-
-        gameEngine.runGame(terminal.handleInput("take cup"), gameEngine);
-
-        Assert.assertTrue(
-                gameEngine.getInventory().contains("cup")
-                        && !gameEngine.getRoom().getItems().contains("cup"));
-    }
-
-    @Test
-    public void testValidHandleTakeCommandLeadingSpaces() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("take       id"), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().contains("id"));
-    }
-
-    @Test
-    public void testValidHandleTakeCommandTrailingSpaces() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("Take   id        "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().contains("id"));
-    }
-
-    @Test
-    public void testValidHandleTakeCommandCapitalAndLowerCases() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("tAkE   iD        "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().contains("id"));
-    }
-
-    @Test
-    public void testInvalidHandleDropCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("take   iD        "), gameEngine);
-        gameEngine.runGame(terminal.handleInput("drop    something        "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().contains("id"));
-    }
-
-    @Test
-    public void testValidHandleDropCommand() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Lounge"));
-
-        gameEngine.runGame(terminal.handleInput("tAkE   CuP   "), gameEngine);
-        gameEngine.runGame(terminal.handleInput("dRoP   Cup "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().isEmpty());
-    }
-
-    @Test
-    public void testValidHandleDropCommandTrailingSpaces() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("take   iD        "), gameEngine);
-        gameEngine.runGame(terminal.handleInput("drop   iD        "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().isEmpty());
-    }
-
-    @Test
-    public void testValidHandleDropCommandLeadingSpaces() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Bathroom"));
-
-        gameEngine.runGame(terminal.handleInput("take   iD        "), gameEngine);
-        gameEngine.runGame(terminal.handleInput("drop              iD        "), gameEngine);
-
-        Assert.assertTrue(gameEngine.getInventory().isEmpty());
-    }
-
-    @Test
-    public void testWinCondition() {
-        gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Vent"));
-
-        gameEngine.runGame(terminal.handleInput("go    SoUth"), gameEngine);
-
-        Assert.assertTrue(gameEngine.isWinCondition());
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidDestroyGameInvalidId() {
+    service.destroyGame(-1);
+  }
 }

@@ -12,6 +12,16 @@ public class Layout {
   private String startingRoom;
   private String endingRoom;
   private List<Room> rooms;
+  private String videoUrl;
+
+  public static Layout file(String path) throws IOException {
+    File file = new File(path);
+    return new ObjectMapper().readValue(file, Layout.class);
+  }
+
+  public String getVideoUrl() {
+    return videoUrl;
+  }
 
   public String getStartingRoom() {
     return startingRoom;
@@ -34,13 +44,8 @@ public class Layout {
    */
   public Room findByRoomName(Collection<Room> listRoom, String roomName) {
     return listRoom.stream()
-            .filter(room -> roomName.equals(room.getName()))
-            .findFirst()
-            .orElse(null);
-  }
-
-  public static Layout file(String path) throws IOException {
-    File file = new File(path);
-    return new ObjectMapper().readValue(file, Layout.class);
+        .filter(room -> roomName.equals(room.getName()))
+        .findFirst()
+        .orElse(null);
   }
 }

@@ -1,6 +1,7 @@
 {
   "startingRoom": "Cell Block A",
   "endingRoom": "Outside",
+  "videoUrl": "https://www.youtube.com/watch?v=ipNqY9wHPqg",
   "rooms": [
     {
       "name": "Cell Block A",

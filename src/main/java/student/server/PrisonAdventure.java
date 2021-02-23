@@ -34,7 +34,7 @@ public class PrisonAdventure implements AdventureService {
     gameEngine.handleStartCommand();
     gameEngines.add(gameEngine);
 
-    if (!(idValue >= 0)) {
+    if (idValue < 0) {
       throw new AdventureException("unknown ID");
     }
 
@@ -51,10 +51,14 @@ public class PrisonAdventure implements AdventureService {
   public GameStatus getGame(int id) {
     boolean exception = false;
     String message;
-    String sound = "https://www.youtube.com/watch?v=ipNqY9wHPqg";
+
+    if (id < 0) {
+      throw new IllegalArgumentException("Unknown Id");
+    }
     GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
     HashMap<String, List<String>> commandOptions = new HashMap<>();
     List<String> path = new ArrayList<>();
+    String sound = gameEngine.getLayout().getVideoUrl();
 
     try {
       if (commands[0] != null && commands[0].equals("Traversed")) {
@@ -97,6 +101,10 @@ public class PrisonAdventure implements AdventureService {
    */
   @Override
   public boolean destroyGame(int id) {
+    if (id < 0) {
+      throw new IllegalArgumentException();
+    }
+
     if (GameEngine.findByGameEngineId(gameEngines, id) == null) {
       return false;
     }
@@ -116,10 +124,14 @@ public class PrisonAdventure implements AdventureService {
    */
   @Override
   public void executeCommand(int id, Command command) {
+    if (id < 0) {
+      throw new IllegalArgumentException("Invalid Id");
+    }
+
     GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
 
-    commands[0] = command.getCommandName();
-    commands[1] = command.getCommandValue();
+    commands[0] = command.getCommandName().toLowerCase();
+    commands[1] = command.getCommandValue().toLowerCase();
 
     gameEngine.runGame(commands, gameEngine);
   }
@@ -133,8 +145,6 @@ public class PrisonAdventure implements AdventureService {
   public SortedMap<String, Integer> fetchLeaderboard() {
     return null;
   }
-
-
 
   public int getIdValue() {
     return idValue;

@@ -21,9 +21,9 @@ public class Terminal {
     String[] inputArray = inputString.toLowerCase().split("\\W+");
 
     if ((inputArray.length == 1 || inputArray.length >= 3)
-            && !(inputArray[0].contains("quit") || inputArray[0].contains("exit"))
-            && !inputArray[0].contains("examine")
-            && !inputArray[0].contains("history")) {
+        && !(inputArray[0].contains("quit") || inputArray[0].contains("exit"))
+        && !inputArray[0].contains("examine")
+        && !inputArray[0].contains("history")) {
       return new String[] {" "};
     }
 

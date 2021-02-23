@@ -50,8 +50,7 @@ public class GameEngineTestTerminal {
   public void testValidHandleGoCommandWithTrailingSpace() {
     gameEngine.setRoom(layout.findByRoomName(layout.getRooms(), "Hallway"));
 
-    gameEngine.runGame(
-        terminal.handleInput("go       SouthEast            "), gameEngine);
+    gameEngine.runGame(terminal.handleInput("go       SouthEast            "), gameEngine);
 
     Assert.assertEquals("Cell Block B", gameEngine.getRoom().getName());
   }
@@ -199,7 +198,7 @@ public class GameEngineTestTerminal {
 
     gameEngine.runGame(terminal.handleInput("drop    Id        "), gameEngine);
 
-    Assert.assertTrue(!gameEngine.getInventory().contains("id"));
+    Assert.assertFalse(gameEngine.getInventory().contains("id"));
   }
 
   @Test
@@ -209,7 +208,7 @@ public class GameEngineTestTerminal {
     gameEngine.runGame(terminal.handleInput("take   iD        "), gameEngine);
     gameEngine.runGame(terminal.handleInput("drop    cup        "), gameEngine);
 
-    Assert.assertTrue(!gameEngine.getInventory().contains("cup"));
+    Assert.assertFalse(gameEngine.getInventory().contains("cup"));
   }
 
   @Test
