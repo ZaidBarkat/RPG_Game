@@ -5,9 +5,9 @@ import java.util.Scanner;
 /** Used to establish the user's input and check what that input is. */
 public class Terminal {
   /**
-   * Prompt before any input, and turns input into string array to make it easier to check string.
+   * User input from the player
    *
-   * @return a string array of the user's input
+   * @return a string of the user input
    */
   public String getUserInput() {
     final String p = ">";
@@ -17,6 +17,12 @@ public class Terminal {
     return input.nextLine();
   }
 
+  /**
+   * Handles the input given by the user, discarding if it is not designed for the run game method
+   *
+   * @param inputString the user input
+   * @return an size 2 array with the command name and value
+   */
   public String[] handleInput(String inputString) {
     String[] inputArray = inputString.toLowerCase().split("\\W+");
 

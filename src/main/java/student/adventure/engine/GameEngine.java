@@ -109,16 +109,20 @@ public class GameEngine {
     return generatePrint();
   }
 
-  /** Examine command */
+  /**
+   * Examine command, repeats information
+   *
+   * @return a string of what is to be displayed
+   */
   private String handleExamineCommand() {
     return generatePrint();
   }
 
   /**
-   * If items list contains the item, then move it to an inventory list and take it out of the item
-   * list.
+   * Take command, checks if the room has the item available, if so, put in the inventory and remove it from the room
    *
-   * @param input used to make sure the item is in the items list
+   * @param input of the item
+   * @return a string to illustrate if there is an item in the room
    */
   private String handleTakeCommand(String input) {
     if (room.getItems().contains(input)) {
@@ -132,10 +136,11 @@ public class GameEngine {
   }
 
   /**
-   * If inventory list contains the item, then move it to an item list and take it out of the
-   * inventory list.
+   * Drop command, checks if the player's inventory has an item, if so, move that item to the room
+   * and remove it from the player's inventory
    *
-   * @param input used to make sure the item is in the items list
+   * @param input of the item
+   * @return a string to illustrate if there is an item in the player's inventory
    */
   private String handleDropCommand(String input) {
     if (inventory.contains(input)) {
@@ -148,20 +153,29 @@ public class GameEngine {
     return "dropped";
   }
 
+  /**
+   * History command, shows the player what rooms they have gone to, in order
+   *
+   * @return a string of the path taken
+   */
   public String handleHistoryCommand() {
     return "Path Taken: " + playerPath;
   }
 
   /**
-   * Checks to see if the room objects name is the ending room.
+   * Win condition is true if the current room is equal to the ending room
    *
-   * @return true if you are in the ending room
+   * @return true if the win condition is met
    */
   public boolean isWinCondition() {
     return room.getName().equals(layout.getEndingRoom());
   }
 
-  /** Illustrating the description, directionNames, and Items in the current room. */
+  /**
+   * Gives the player an idea of what room, items, and directions are available
+   *
+   * @return a string of the room, directionNames, and Items
+   */
   private String generatePrint() {
     return room.getDescription()
         + "\n"
@@ -172,13 +186,22 @@ public class GameEngine {
         + room.getItems();
   }
 
-  /** Used to add directionNames into a list from the room objects. */
+  /**
+   * Stream to find the Direction object based off of the direction name
+   */
   private void addDirectionNames() {
     for (Direction direction : room.getDirections()) {
       directionNames.add(direction.getDirectionName());
     }
   }
 
+  /**
+   * Runs the corresponding method depending on what the input from the player is
+   *
+   * @param inputArray a size 2 array with the input command and input value
+   * @param gameEngine instance of the GameEngine object
+   * @return a string of the method being called
+   */
   public String runGame(String[] inputArray, GameEngine gameEngine) {
 
     if (inputArray[0].contains("go")) {

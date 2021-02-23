@@ -1,13 +1,6 @@
 package student.server;
 
 import student.adventure.engine.GameEngine;
-import student.adventure.pojo.Room;
-import student.server.AdventureException;
-import student.server.AdventureService;
-import student.server.Command;
-import student.server.GameStatus;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class PrisonAdventure implements AdventureService {
@@ -29,6 +22,7 @@ public class PrisonAdventure implements AdventureService {
    */
   @Override
   public int newGame() throws AdventureException {
+    //Increments idValue, and then sets a new GameEngine instance with that idValue
     idValue++;
     GameEngine gameEngine = new GameEngine(idValue);
     gameEngine.handleStartCommand();
@@ -55,13 +49,15 @@ public class PrisonAdventure implements AdventureService {
     if (id < 0) {
       throw new IllegalArgumentException("Unknown Id");
     }
+    //Finds the gameEngine based on the list and id of the gameEngines
     GameEngine gameEngine = GameEngine.findByGameEngineId(gameEngines, id);
     HashMap<String, List<String>> commandOptions = new HashMap<>();
     List<String> path = new ArrayList<>();
     String sound = gameEngine.getLayout().getVideoUrl();
 
+    //Try/catch to make sure that gameEngine is not null
     try {
-      if (commands[0] != null && commands[0].equals("Traversed")) {
+      if (commands[0] != null && commands[0].equals("traversed")) {
         message = gameEngine.getRoom().getDescription() + "\n" + gameEngine.handleHistoryCommand();
       } else {
         message = gameEngine.getRoom().getDescription();
@@ -71,8 +67,10 @@ public class PrisonAdventure implements AdventureService {
       message = "";
     }
 
+    //Needed to show the Traversed button on the website
     path.add("path");
 
+    //Filling map with commands from the gameEngine
     commandOptions.put("go", gameEngine.getDirectionNames());
     commandOptions.put("Traversed", path);
     commandOptions.put("take", gameEngine.getRoom().getItems());
@@ -144,10 +142,6 @@ public class PrisonAdventure implements AdventureService {
   @Override
   public SortedMap<String, Integer> fetchLeaderboard() {
     return null;
-  }
-
-  public int getIdValue() {
-    return idValue;
   }
 
   public ArrayList<GameEngine> getGameEngines() {
